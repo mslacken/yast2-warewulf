@@ -14,7 +14,7 @@ module WarewulfBase
 
     def initialize
       textdomain "warewulf"
-      get_nodelist
+      @nodelist = get_nodelist
     end
      
     # Displays the dialog
@@ -73,6 +73,7 @@ module WarewulfBase
           break
         when :refresh
           get_nodelist
+          puts "Refresh pressed"
         else
           log.warn "Unexpected input #{input}"
         end
@@ -118,7 +119,12 @@ module WarewulfBase
       VBox(*checkboxes)
     end
     def table_items
-      entries_fields = @nodelist.map {|fields| Item(*fields) }
+      list = []
+      nodes = @nodelist
+      nodes.each{|node|
+        list.push([node["id"]["value"],node["container"]["value"],node["profiles"].to_s])
+      }
+      list.map {|fields| Item(*fields) }
     end
     # read the node list
     def get_nodelist
